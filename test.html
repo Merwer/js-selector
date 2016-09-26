@@ -1,0 +1,33 @@
+<html>
+	<head>
+		<title>JS Selector Test</title>
+	</head>
+	<body>
+		<h2>JS Selector Test</h2>
+		<button id="random-trigger">Get Random</button>
+		<table id="random-target">
+		</table>
+		<script src="jsselector.js"></script>
+		<script>
+			function getRandom() {
+				var item = selector.getItem();
+				var element = document.getElementById("random-target");
+				var row = "<tr><td>" + item + "</td></tr>";
+				element.innerHTML = element.innerHTML + row;
+			}
+
+			var selector = new JsSelector();
+			var list = [
+				{"value": "Item 1", "weight": 5},
+				{"value": "Item 2", "weight": 10},
+				{"value": "Item 3", "weight": 1},
+				{"value": "Item 4", "weight": 0},
+				{"value": "Item 5"} // Default weight (1)
+			];
+			selector.loadList(list);
+			
+			document.getElementById("random-trigger")
+				.addEventListener("click", getRandom);
+		</script>
+	</body>
+</html>
