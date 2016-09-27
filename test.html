@@ -4,16 +4,39 @@
 	</head>
 	<body>
 		<h2>JS Selector Test</h2>
-		<button id="random-trigger">Get Random</button>
-		<table id="random-target">
+		<input id="iterations" value="10"></input>
+		<button id="random-trigger">Generate Values</button>
+		<table border="2" id="random-target">
 		</table>
 		<script src="jsselector.js"></script>
 		<script>
-			function getRandom() {
-				var item = selector.getItem();
-				var element = document.getElementById("random-target");
-				var row = "<tr><td>" + item + "</td></tr>";
-				element.innerHTML = element.innerHTML + row;
+			function getRandom(weights) {
+				var iterationsElement = document.getElementById("iterations");
+				var iterations = iterationsElement.value;
+				var items = {};
+				var item;
+				for(var index = 0; index < iterations; index++) {
+					item = selector.getItem();
+					if(items[item] === undefined) {
+						items[item] = 1;
+					} else {
+						items[item]++;
+					}
+				}
+				
+				var table = document.getElementById("random-target");
+				var rows = "<thead><tr><th>Value</th><th>Weight</th><th>Occurrances</th><th>Percent</th></tr></thead><tbody>";
+				for(var index = 0; index < weights.length; index++) {
+					var weightObj = weights[index];
+					var key = weightObj.value;
+					var weight = weightObj.weight === undefined ? 1 : weightObj.weight;
+					var match = items[key] || 0;
+					var percent = (100 * match) / iterations;
+					
+					rows += "<tr><td>" + weightObj.value + "</td><td>" + weight + "</td><td>" + match + "</td><td>" + percent + "</td></tr>";
+				}
+				rows += "</tbody>";
+				table.innerHTML = rows;
 			}
 
 			var selector = new JsSelector();
@@ -27,7 +50,7 @@
 			selector.loadList(list);
 			
 			document.getElementById("random-trigger")
-				.addEventListener("click", getRandom);
+				.addEventListener("click", function() { getRandom(list); });
 		</script>
 	</body>
 </html>
